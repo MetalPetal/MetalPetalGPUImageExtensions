@@ -1,0 +1,6 @@
+framework module MetalPetalGPUImageExtensions {
+  umbrella header "MetalPetalGPUImageExtensions-umbrella.h"
+
+  export *
+  module * { export * }
+}

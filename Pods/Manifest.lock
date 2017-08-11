@@ -1,0 +1,39 @@
+PODS:
+  - GPUImage (0.1.7)
+  - MetalPetal (0.0.2):
+    - MetalPetal/Core (= 0.0.2)
+  - MetalPetal/Core (0.0.2)
+  - MetalPetalGPUImageExtensions (1.0):
+    - GPUImage
+    - MetalPetal
+
+DEPENDENCIES:
+  - GPUImage (from `https://github.com/BradLarson/GPUImage.git`, commit `167b0389bc6e9dc4bb0121550f91d8d5d6412c53`)
+  - MetalPetal (from `https://github.com/MetalPetal/MetalPetal.git`)
+  - MetalPetalGPUImageExtensions (from `Frameworks/MetalPetalGPUImageExtensions`)
+
+EXTERNAL SOURCES:
+  GPUImage:
+    :commit: 167b0389bc6e9dc4bb0121550f91d8d5d6412c53
+    :git: https://github.com/BradLarson/GPUImage.git
+  MetalPetal:
+    :git: https://github.com/MetalPetal/MetalPetal.git
+  MetalPetalGPUImageExtensions:
+    :path: Frameworks/MetalPetalGPUImageExtensions
+
+CHECKOUT OPTIONS:
+  GPUImage:
+    :commit: 167b0389bc6e9dc4bb0121550f91d8d5d6412c53
+    :git: https://github.com/BradLarson/GPUImage.git
+  MetalPetal:
+    :commit: d1a3773d80684146e9205af96b228b13c1547c5b
+    :git: https://github.com/MetalPetal/MetalPetal.git
+
+SPEC CHECKSUMS:
+  GPUImage: bd7e201b9aa91e85f401ed7a6d9867a07a404693
+  MetalPetal: c106a62d646c5af0142f87692e7d472eab50df08
+  MetalPetalGPUImageExtensions: 25adb7d8f3503d592663fdcaa728fc1c9d5fa5c2
+
+PODFILE CHECKSUM: 52e9085d15739201a80b0b07d878608e0475913d
+
+COCOAPODS: 1.2.1

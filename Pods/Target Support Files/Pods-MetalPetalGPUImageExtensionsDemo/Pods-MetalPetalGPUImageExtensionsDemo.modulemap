@@ -1,0 +1,6 @@
+framework module Pods_MetalPetalGPUImageExtensionsDemo {
+  umbrella header "Pods-MetalPetalGPUImageExtensionsDemo-umbrella.h"
+
+  export *
+  module * { export * }
+}

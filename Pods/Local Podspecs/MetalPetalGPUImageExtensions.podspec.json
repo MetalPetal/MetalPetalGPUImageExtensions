@@ -1,0 +1,29 @@
+{
+  "name": "MetalPetalGPUImageExtensions",
+  "version": "1.0",
+  "authors": {
+    "YuAo": "me@imyuao.com"
+  },
+  "homepage": "https://github.com/MetalPetal/MetalPetalGPUImageExtensions",
+  "summary": "MetalPetal GPUImageExtensions",
+  "license": {
+    "type": "MIT"
+  },
+  "source": {
+    "git": "https://github.com/MetalPetal/MetalPetalGPUImageExtensions.git",
+    "tag": "1.0"
+  },
+  "requires_arc": true,
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source_files": "**/*.{h,m,c,mm,metal}",
+  "dependencies": {
+    "MetalPetal": [
+
+    ],
+    "GPUImage": [
+
+    ]
+  }
+}
