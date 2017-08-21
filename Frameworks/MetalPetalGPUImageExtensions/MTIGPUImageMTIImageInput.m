@@ -8,15 +8,6 @@
 
 #import "MTIGPUImageMTIImageInput.h"
 
-static NSInteger MTIGPUImageMTIImageInputPixelBufferPoolMinimumBufferCount = 60;
-
-static void MTIGPUImageMTIImageInputCVPixelBufferPoolIsOutOfBuffer(MTIGPUImageMTIImageInput *input)
-{
-#if DEBUG
-    NSLog(@"%@: Pool is out of buffers. Create a symbolic breakpoint of MTIGPUImageMTIImageInputCVPixelBufferPoolIsOutOfBuffer to debug.", input);
-#endif
-}
-
 static void MTIGPUImageMTIImageInputCheckGLErrors()
 {
     GLenum error;
@@ -31,10 +22,6 @@ static void MTIGPUImageMTIImageInputCheckGLErrors()
     NSCAssert(!hadError, @"OpenGL Error");
 }
 
-@interface MTIGPUImageMTIImageInput ()
-@property (atomic) CVPixelBufferPoolRef pixelBufferPool;
-@end
-
 @implementation MTIGPUImageMTIImageInput {
     dispatch_group_t frameProcessingGroup;
     BOOL applicationIsForeground;
@@ -46,10 +33,6 @@ static void MTIGPUImageMTIImageInputCheckGLErrors()
 
 - (void)dealloc
 {
-    if (self.pixelBufferPool) {
-        CVPixelBufferPoolRelease(self.pixelBufferPool);
-        self.pixelBufferPool = NULL;
-    }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -133,38 +116,23 @@ static void MTIGPUImageMTIImageInputCheckGLErrors()
                 prepareForProcessing();
             }
             
-            [self createPixelBufferPoolWithPixelBufferSizeIfNeeded:image.extent.size];
+            outputFramebuffer = [[GPUImageContext sharedFramebufferCache] fetchFramebufferForSize:CGSizeMake(image.extent.size.width, image.extent.size.height) textureOptions:self.outputTextureOptions onlyTexture:NO];
             
-            CVPixelBufferRef pixelBuffer = NULL;
-            NSDictionary *auxAttributes = @{ (id)kCVPixelBufferPoolAllocationThresholdKey : @(MTIGPUImageMTIImageInputPixelBufferPoolMinimumBufferCount) };
-            CVReturn ret = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes(kCFAllocatorDefault,
-                                                                               self.pixelBufferPool,
-                                                                               (__bridge CFDictionaryRef)(auxAttributes),
-                                                                               &pixelBuffer);
-            if (ret != kCVReturnSuccess || pixelBuffer == NULL) {
-                pixelBuffer = NULL;
-                if (ret == kCVReturnWouldExceedAllocationThreshold) {
-                    CVOpenGLESTextureCacheFlush([GPUImageContext sharedImageProcessingContext].coreVideoTextureCache, 0);
-                    MTIGPUImageMTIImageInputCVPixelBufferPoolIsOutOfBuffer(self);
-                } else {
-                    NSAssert(NO, @"%@: Error at CVPixelBufferPoolCreatePixelBuffer %@", self, @(ret));
-                }
-                return;
-            }
+            CVPixelBufferRef pixelBuffer = outputFramebuffer.pixelBuffer;
             
             CVOpenGLESTextureRef coreVideoOpenGLESTexture = NULL;
-            ret = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
-                                                               [GPUImageContext sharedImageProcessingContext].coreVideoTextureCache,
-                                                               pixelBuffer,
-                                                               NULL,
-                                                               GL_TEXTURE_2D,
-                                                               GL_RGBA,
-                                                               (GLsizei)image.extent.size.width,
-                                                               (GLsizei)image.extent.size.height,
-                                                               GL_BGRA,
-                                                               GL_UNSIGNED_BYTE,
-                                                               0,
-                                                               &coreVideoOpenGLESTexture);
+            CVReturn ret = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
+                                                                        [GPUImageContext sharedImageProcessingContext].coreVideoTextureCache,
+                                                                        pixelBuffer,
+                                                                        NULL,
+                                                                        GL_TEXTURE_2D,
+                                                                        GL_RGBA,
+                                                                        (GLsizei)image.extent.size.width,
+                                                                        (GLsizei)image.extent.size.height,
+                                                                        GL_BGRA,
+                                                                        GL_UNSIGNED_BYTE,
+                                                                        0,
+                                                                        &coreVideoOpenGLESTexture);
             NSAssert(ret == kCVReturnSuccess, @"CVOpenGLESTextureCacheCreateTextureFromImage failed ()", @(ret));
             if (ret == kCVReturnSuccess && coreVideoOpenGLESTexture) {
                 NSError *error = nil;
@@ -173,7 +141,6 @@ static void MTIGPUImageMTIImageInputCheckGLErrors()
                     if (coreVideoOpenGLESTexture) {
                         CFRelease(coreVideoOpenGLESTexture);
                     }
-                    CVPixelBufferRelease(pixelBuffer);
                     NSAssert(NO, @"Render MTIImage to CVPixelBuffer failed: %@", error.localizedDescription);
                     return;
                 }
@@ -182,7 +149,6 @@ static void MTIGPUImageMTIImageInputCheckGLErrors()
                     [self setupPassthroughProgram];
                 }
                 
-                outputFramebuffer = [[GPUImageContext sharedFramebufferCache] fetchFramebufferForSize:CGSizeMake(image.extent.size.width, image.extent.size.height) textureOptions:self.outputTextureOptions onlyTexture:NO];
                 [outputFramebuffer activateFramebuffer];
                 
                 [GPUImageContext setActiveShaderProgram:passthroughProgram];
@@ -221,7 +187,6 @@ static void MTIGPUImageMTIImageInputCheckGLErrors()
             if (coreVideoOpenGLESTexture) {
                 CFRelease(coreVideoOpenGLESTexture);
             }
-            CVPixelBufferRelease(pixelBuffer);
             
             if (completion) {
                 completion();
@@ -232,36 +197,6 @@ static void MTIGPUImageMTIImageInputCheckGLErrors()
         
         return YES;
     }
-}
-
-- (void)createPixelBufferPoolWithPixelBufferSizeIfNeeded:(CGSize)size
-{
-    if (self.pixelBufferPool) {
-        NSDictionary *pixelBufferPoolAttributes = (__bridge NSDictionary *)CVPixelBufferPoolGetPixelBufferAttributes(self.pixelBufferPool);
-        if ([pixelBufferPoolAttributes[(id)kCVPixelBufferWidthKey] integerValue] == (NSInteger)size.width &&
-            [pixelBufferPoolAttributes[(id)kCVPixelBufferHeightKey] integerValue] == (NSInteger)size.height) {
-            return;
-        }
-    }
-    
-    if (self.pixelBufferPool) {
-        CVPixelBufferPoolRelease(self.pixelBufferPool);
-        self.pixelBufferPool = NULL;
-    }
-    
-    CVPixelBufferPoolRef outputPool = NULL;
-    NSDictionary *sourcePixelBufferOptions = @{ (id)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_32BGRA),
-                                                (id)kCVPixelBufferWidthKey : @(size.width),
-                                                (id)kCVPixelBufferHeightKey : @(size.height),
-                                                (id)kCVPixelFormatOpenGLESCompatibility : @(YES),
-                                                (id)kCVPixelBufferIOSurfacePropertiesKey : @{ } };
-    NSDictionary *pixelBufferPoolOptions = @{ (id)kCVPixelBufferPoolMinimumBufferCountKey : @(MTIGPUImageMTIImageInputPixelBufferPoolMinimumBufferCount) };
-    CVReturn ret = CVPixelBufferPoolCreate(kCFAllocatorDefault,
-                                           (__bridge CFDictionaryRef)(pixelBufferPoolOptions),
-                                           (__bridge CFDictionaryRef)(sourcePixelBufferOptions),
-                                           &outputPool);
-    NSAssert(ret == kCVReturnSuccess, @"CVPixelBufferPoolCreate Failed ()", @(ret));
-    self.pixelBufferPool = outputPool;
 }
 
 - (void)setupPassthroughProgram
