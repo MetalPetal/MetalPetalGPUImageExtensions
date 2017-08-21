@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		814BD9701F46D9B300CD69B2 /* IMG_1762121212.MOV in Resources */ = {isa = PBXBuildFile; fileRef = 814BD96F1F46D9B300CD69B2 /* IMG_1762121212.MOV */; };
+		814BD9721F46DA3F00CD69B2 /* P1040602.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 814BD9711F46DA3F00CD69B2 /* P1040602.jpg */; };
+		815EE8701F3D950600960E6E /* P1040808.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 815EE86F1F3D950600960E6E /* P1040808.jpg */; };
 		9DEB57D61F3D5C3800A874E9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DEB57D51F3D5C3800A874E9 /* main.m */; };
 		9DEB57D91F3D5C3800A874E9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DEB57D81F3D5C3800A874E9 /* AppDelegate.m */; };
 		9DEB57DC1F3D5C3800A874E9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DEB57DB1F3D5C3800A874E9 /* ViewController.m */; };
@@ -20,6 +23,9 @@
 		521F84211B675EF9EC9BD9F5 /* Pods-MetalPetalGPUImageExtensionsDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetalPetalGPUImageExtensionsDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-MetalPetalGPUImageExtensionsDemo/Pods-MetalPetalGPUImageExtensionsDemo.release.xcconfig"; sourceTree = "<group>"; };
 		55C67E9D877FDDE7C2DE86C3 /* Pods-MetalPetalGPUImageExtensionsDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetalPetalGPUImageExtensionsDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MetalPetalGPUImageExtensionsDemo/Pods-MetalPetalGPUImageExtensionsDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		7C7361B42355A9F8A7780677 /* Pods_MetalPetalGPUImageExtensionsDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MetalPetalGPUImageExtensionsDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		814BD96F1F46D9B300CD69B2 /* IMG_1762121212.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = IMG_1762121212.MOV; sourceTree = "<group>"; };
+		814BD9711F46DA3F00CD69B2 /* P1040602.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = P1040602.jpg; sourceTree = "<group>"; };
+		815EE86F1F3D950600960E6E /* P1040808.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = P1040808.jpg; sourceTree = "<group>"; };
 		9DEB57D11F3D5C3800A874E9 /* MetalPetalGPUImageExtensionsDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetalPetalGPUImageExtensionsDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DEB57D51F3D5C3800A874E9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9DEB57D71F3D5C3800A874E9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -77,6 +83,9 @@
 				9DEB57D81F3D5C3800A874E9 /* AppDelegate.m */,
 				9DEB57DA1F3D5C3800A874E9 /* ViewController.h */,
 				9DEB57DB1F3D5C3800A874E9 /* ViewController.m */,
+				815EE86F1F3D950600960E6E /* P1040808.jpg */,
+				814BD9711F46DA3F00CD69B2 /* P1040602.jpg */,
+				814BD96F1F46D9B300CD69B2 /* IMG_1762121212.MOV */,
 				9DEB57DD1F3D5C3800A874E9 /* Main.storyboard */,
 				9DEB57E01F3D5C3800A874E9 /* Assets.xcassets */,
 				9DEB57E21F3D5C3800A874E9 /* LaunchScreen.storyboard */,
@@ -167,7 +176,10 @@
 			files = (
 				9DEB57E41F3D5C3800A874E9 /* LaunchScreen.storyboard in Resources */,
 				9DEB57E11F3D5C3800A874E9 /* Assets.xcassets in Resources */,
+				814BD9721F46DA3F00CD69B2 /* P1040602.jpg in Resources */,
 				9DEB57DF1F3D5C3800A874E9 /* Main.storyboard in Resources */,
+				815EE8701F3D950600960E6E /* P1040808.jpg in Resources */,
+				814BD9701F46D9B300CD69B2 /* IMG_1762121212.MOV in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

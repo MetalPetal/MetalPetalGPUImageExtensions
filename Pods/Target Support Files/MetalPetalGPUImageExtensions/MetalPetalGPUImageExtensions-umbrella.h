@@ -11,6 +11,8 @@
 #endif
 
 #import "MTIGPUImageFilter.h"
+#import "MTIGPUImageMTIImageInput.h"
+#import "MTIGPUImageMTIImageOutput.h"
 
 FOUNDATION_EXPORT double MetalPetalGPUImageExtensionsVersionNumber;
 FOUNDATION_EXPORT const unsigned char MetalPetalGPUImageExtensionsVersionString[];
