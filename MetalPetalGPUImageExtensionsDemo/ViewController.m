@@ -28,8 +28,17 @@
 
 @implementation ViewController
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+    [notificationCenter addObserver:self selector:@selector(applicationWillBecomeActive:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
     __weak __typeof(self) weakSelf = self;
     
@@ -106,13 +115,24 @@
 
 - (void)drawInMTKView:(nonnull MTKView *)view
 {
-    if (self.mtiImage && [view currentDrawable]) {
+    if (self.mtiImage && [view currentDrawable] && [UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
         MTIDrawableRenderingRequest *request = [[MTIDrawableRenderingRequest alloc] init];
         request.drawableProvider = self.mtkView;
         request.resizingMode = MTIDrawableRenderingResizingModeAspect;
         [self.context renderImage:self.mtiImage toDrawableWithRequest:request error:nil];
     }
 }
+
+- (void)applicationWillResignActive:(id)sender
+{
+    [self.movie endProcessing];
+}
+
+- (void)applicationWillBecomeActive:(id)sender
+{
+    [self.movie startProcessing];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
